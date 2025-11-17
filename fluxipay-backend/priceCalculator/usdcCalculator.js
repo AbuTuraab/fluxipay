@@ -8,7 +8,7 @@ app.use(cors());
 app.use(express.json());         1                                                                                                                                                                                                                                                                     
 
 const amountInUSD  = (numberOfTokens) => {
-    const tokenprice = 4.5;
+    const tokenprice = 1;
     return numberOfTokens * tokenprice;
 
 }

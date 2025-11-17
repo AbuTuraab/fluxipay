@@ -19,7 +19,6 @@ const token = Buffer.from(
 
 router.get("/", async (req, res) => { 
   try {
-    console.log(`${ApiKey}`);
     
     const loginRes = await axios({
         method: 'post',

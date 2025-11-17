@@ -17,8 +17,11 @@ import {
 
 import axios, { Axios } from 'axios';
 
+type HandleBankListProps = {
+  getBankCode: (code: string) => void;
+};
 
-function HandleBankList({getBankCode}) {
+function HandleBankList({ getBankCode }: HandleBankListProps) {
   const [banksList, setBanksList] = useState<{ code: string; name: string }[]>([]);
   const [selectedBankName, setSelectedBankName] = useState('');
   const [selectedBankCode, setSelectedBankCode] = useState('');
@@ -29,7 +32,7 @@ const handleBanksListFetch = async () =>{
   try {
    const response = await axios({
      method: "get",
-     url: 'http://localhost:5000/fetchbankslist',
+     url: 'https://fluxipay.onrender.com/fetchbankslist',
      headers: { 'Content-Type': 'application/json' },
   });
  
@@ -87,3 +90,4 @@ const handleBanksListFetch = async () =>{
 }
 
 export default HandleBankList;
+

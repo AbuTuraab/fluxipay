@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const dotenv = require("dotenv");
-const amountInUSD = require("../priceCalculator/dotcalculator");
+const amountInUSD = require("../priceCalculator/usdcCalculator");
 
 const cors = require("cors");
 const axios = require("axios");

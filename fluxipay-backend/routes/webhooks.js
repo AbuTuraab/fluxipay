@@ -15,7 +15,6 @@ router.post("/monnifywebhook", async (req, res) => {
 
     res.status(200);
     try {
-       console.log("webhook received:", req.body);
         const { transactionReference, status, amount, currency } = req.body;
         res.status(200).json({ 
             message: 'Webhook received', 

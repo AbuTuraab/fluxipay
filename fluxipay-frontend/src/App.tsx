@@ -15,7 +15,7 @@ import {
   useColorModeValue,
   Divider,
   Flex,
-  Spacer,
+  Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalCloseButton
 } from '@chakra-ui/react';
 
 import { LunoKitProvider, ConnectButton } from '@luno-kit/ui';
@@ -33,6 +33,7 @@ import {
   useSendTransaction,
   useStatus,
 } from '@luno-kit/react';
+import io from "socket.io-client";
 
 import '@luno-kit/ui/styles.css';
 import { PASSETHUB } from './networks.ts';
@@ -55,6 +56,8 @@ const config = createConfig({
   autoConnect: true,
 });
 
+
+
 function Connection() {
   const [recipientBankAccount, setRecipientBankAccount] = useState('');
   const [amount, setAmount] = useState('');
@@ -63,13 +66,17 @@ function Connection() {
   const { api } = useApi();
   const { sendTransactionAsync, isPending } = useSendTransaction();
   const status = useStatus();
+  const [swapResponse, setSwapResponse] = useState<string>();
+
+
+  
 
   useEffect(() => {
     const timeout = setTimeout(() => {
       try {
         axios({
           method: 'get',
-          url: 'http://localhost:5000/transfer/calculateamount',
+          url: 'https://fluxipay.onrender.com/transfer/calculateamount',
           params: { amount },
           headers: { 'Content-Type': 'application/json' },
         })
@@ -100,7 +107,7 @@ function Connection() {
       if (receipt.status === 'success') {
         axios({
           method: 'post',
-          url: 'http://localhost:5000/transfer',
+          url: 'https://fluxipay.onrender.com/transfer',
           data: {
             recipientBankAccount,
             amount,
@@ -108,22 +115,24 @@ function Connection() {
           },
           headers: { 'Content-Type': 'application/json' },
         }).then((response) => {
-          console.log(`You will receive ₦${response.data.amountToReceiveInNaira}`);
+        setSwapResponse(`You have successfully swappped ${amount} USDC for ${amountToReceiveResponse} Naira`)
         });
       } else {
-        console.error('Transaction failed:', receipt.transactionHash);
+      console.log("error");
+      
+       
       }
     } catch (error) {
-      console.error('Transaction failed:', error);
+ console.log("error");
+ 
     }
   };
 
-  // UI Colors
   const cardBg = useColorModeValue('#ecd1f8ff', '#ecd1f8ff');
   const inputBg = useColorModeValue('white', 'gray.700');
 
   return (
-    <Container maxW="lg" py={6} >
+    <Container maxW="lg">
       <VStack spacing={6}>
         <Heading bgClip="text" bgGradient="linear(to-r, #8114b0, #ff4d97, #f7ff3c)" textAlign="center" fontWeight="extrabold">
           Fluxipay
@@ -132,10 +141,10 @@ function Connection() {
         <Card w="100%" bg={cardBg} boxShadow="lg" borderRadius="2xl" p={4}>
           <CardBody>
             <form onSubmit={handleSubmit}>
-              {/* From Token (PAS) */}
-              <Box mb={4}>
+            
+              <Box>
                 <Text fontWeight="medium" mb={2}>
-                  From (PAS)
+                  From PAS(USDC and others to come when we are live) 
                 </Text>
                 <HStack>
                   <Input
@@ -148,13 +157,10 @@ function Connection() {
                        _placeholder={{ color: "white", opacity: 10 }} 
                      bgGradient="linear(to-r, #8114b0, #ff4d97,)"
                   />
-                  {/* <Button variant="outline" size="sm" colorScheme="blue">
-                    Max
-                  </Button> */}
                 </HStack>
               </Box>
 
-              <Flex alignItems="center" justify="center" my={4} >
+              <Flex alignItems="center" justify="center" >
                 <Divider bgGradient="linear(to-r, #8114b0, #ff4d97)" />
                 <Text mx={2} color="gray.400" bgClip={"text"}   bgGradient="linear(to-r, #8114b0)">
                   ↓
@@ -162,7 +168,7 @@ function Connection() {
                 <Divider />
               </Flex>
 
-              {/* To — Naira Bank */}
+              {/* To Naira Bank */}
               <Box mb={4}>
                 <Text fontWeight="medium" mb={2}>
                   To (Nigerian Bank)
@@ -197,12 +203,14 @@ function Connection() {
                   mb={3}
                   bgGradient="linear(to-r, #8114b0, #ff4d97)"
                 >
-                  <Text fontSize="sm" >
-                    You will receive approximately
-                  </Text>
-                  <Heading size="md">
-                    ₦{amountToReceiveResponse}
-                  </Heading>
+                  {swapResponse ? (
+                    <Text fontSize="sm">{swapResponse}</Text>
+                  ) : (
+                    <>
+                      <Text fontSize="sm">You will receive approximately </Text>
+                      <Heading size="md">  # {amountToReceiveResponse} Naira</Heading>
+                    </>
+                  )}
                 </Box>
               )}
 
@@ -214,6 +222,7 @@ function Connection() {
                 borderRadius="xl"
                 isLoading={isPending}
                 color={"white"}
+                 _hover={{ bg: '#8114b0' }} 
               >
                 Swap 
               </Button>
