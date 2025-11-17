@@ -98,6 +98,10 @@ function Connection() {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     try {
+       if (!api) {
+    console.error("API not ready");
+    return;
+  }
       const transferExtrinsic = api.tx.balances.transferKeepAlive(
         '1eAZspUsqMru9QYgp5UYri8AZs2PErgQr24MTnTjcebJexN',
         BigInt(Math.floor(Number(amount) * Math.pow(10, PASSETHUB.decimals)))
