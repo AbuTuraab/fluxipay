@@ -33,7 +33,7 @@ import {
   useSendTransaction,
   useStatus,
 } from '@luno-kit/react';
-import io from "socket.io-client";
+
 
 import '@luno-kit/ui/styles.css';
 import { PASSETHUB } from './networks.ts';
@@ -119,6 +119,8 @@ function Connection() {
           },
           headers: { 'Content-Type': 'application/json' },
         }).then((response) => {
+          console.log(response);
+          
         setSwapResponse(`You have successfully swappped ${amount} USDC for ${amountToReceiveResponse} Naira`)
         });
       } else {
@@ -156,12 +158,15 @@ function Connection() {
                     type="number"
                
                     placeholder="Enter amount"
-                    value={amount}
-                    onChange={(e) => setAmount(e.target.value)}
+                    value={(amount)}
+                    onChange={(e) => { setAmount(e.target.value); 
+                      setSwapResponse(""); }}
                        _placeholder={{ color: "white", opacity: 10 }} 
                      bgGradient="linear(to-r, #8114b0, #ff4d97,)"
                   />
                 </HStack>
+              
+        <p>Swapping fee: 3%</p>
               </Box>
 
               <Flex alignItems="center" justify="center" >
@@ -212,7 +217,7 @@ function Connection() {
                   ) : (
                     <>
                       <Text fontSize="sm">You will receive approximately </Text>
-                      <Heading size="md">  # {amountToReceiveResponse} Naira</Heading>
+                      <Heading size="md">  # {Number(amountToReceiveResponse).toFixed(2)} Naira</Heading>
                     </>
                   )}
                 </Box>

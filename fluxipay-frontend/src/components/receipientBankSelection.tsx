@@ -13,15 +13,16 @@ import {
   FormErrorMessage,
   FormHelperText,
   Select,
+   Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalCloseButton
 } from '@chakra-ui/react';
+
+
 
 import axios, { Axios } from 'axios';
 
-type HandleBankListProps = {
-  getBankCode: (code: string) => void;
-};
 
-function HandleBankList({ getBankCode }: HandleBankListProps) {
+
+function HandleBankList({ getBankCode }: { getBankCode: (code: string) => void }) {
   const [banksList, setBanksList] = useState<{ code: string; name: string }[]>([]);
   const [selectedBankName, setSelectedBankName] = useState('');
   const [selectedBankCode, setSelectedBankCode] = useState('');
@@ -57,8 +58,8 @@ const handleBanksListFetch = async () =>{
           <Select placeholder='Select Recipient Bank' 
 
                      bgGradient="linear(to-r, #8114b0, #ff4d97,)"
-                     color={"white"}
-          
+                 
+          color={"white"}
           value={selectedBankCode}
           onChange={e => {
             const code = e.target.value;
@@ -67,12 +68,16 @@ const handleBanksListFetch = async () =>{
             setSelectedBankName(bank ? bank.name : '');
             console.log('Selected bank code:', code);
             getBankCode(code)
-            
+              
           }}
           required
           >
          {banksList.map((bank) => (
-           <option key={bank.code} value={bank.code}>
+           <option
+             key={bank.code}
+             value={bank.code}
+             style={{ color: 'black'}}
+           >
              {bank.name}
            </option>
          ))}
@@ -90,4 +95,3 @@ const handleBanksListFetch = async () =>{
 }
 
 export default HandleBankList;
-

@@ -24,9 +24,9 @@ const token = Buffer.from(
 router.get("/calculateamount", async(req,res) => {
 const { amount } = req.query;  
 
- 
-const amountToReceiveInNaira = amountInUSD(amount) * 1500;
-// console.log("amountToReceiveInNaira is", amountToReceiveInNaira);
+ const fee = 0.03;
+const amountMinusFee = amount - (fee * amount)
+const amountToReceiveInNaira = amountInUSD(amountMinusFee) * 1500;
  res.status(200).json({ amountToReceiveInNaira: amountToReceiveInNaira });
 });
 
@@ -37,7 +37,9 @@ router.post("/", async (req, res) => {
 
    
 //console.log(amountToReceiveInNaira);
-const amountToReceiveInNaira = amountInUSD(amount) * 1500;
+const fee = 0.03;
+const amountMinusFee = amount - (fee * amount)
+const amountToReceiveInNaira = amountInUSD(amountMinusFee) * 1500;
 console.log("amountToReceiveInNaira is", amountToReceiveInNaira);
  res.status(200).json({ amountToReceiveInNaira: amountToReceiveInNaira });
 
