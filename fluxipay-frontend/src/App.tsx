@@ -121,7 +121,7 @@ function Connection() {
         }).then((response) => {
           console.log(response);
           
-        setSwapResponse(`You have successfully swappped ${amount} USDC for ${amountToReceiveResponse} Naira`)
+        setSwapResponse(`You have successfully swappped ${amount} USDC for ${Number(amountToReceiveResponse).toFixed(2)} Naira`)
         });
       } else {
       console.log("error");
